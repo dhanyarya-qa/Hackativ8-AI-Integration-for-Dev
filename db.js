@@ -5,12 +5,19 @@
 
 import Database from 'better-sqlite3';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const db = new Database(path.join(__dirname, 'database', 'chatbot.db'));
+// Ensure database directory exists
+const dbDir = path.join(__dirname, 'database');
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+}
+
+const db = new Database(path.join(dbDir, 'chatbot.db'));
 
 db.pragma('journal_mode = WAL');
 
